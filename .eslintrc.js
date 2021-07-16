@@ -13,7 +13,6 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:@typescript-eslint/recommended',
   ],
-  plugins: ['import'],
   rules: {
     // note you must disable the base rule as it can report incorrect errors
     'no-unused-vars': 'off',
@@ -26,28 +25,6 @@ module.exports = {
     'node/shebang': 'off',
     'no-console': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    'import/order': [
-      'error',
-      {
-        alphabetize: { order: 'asc' },
-        'newlines-between': 'always',
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          'parent',
-          'sibling',
-          'index',
-        ],
-        pathGroups: [
-          {
-            pattern: '@/**',
-            group: 'internal',
-          },
-        ],
-        pathGroupsExcludedImportTypes: ['builtin'],
-      },
-    ],
   },
   overrides: [
     {
