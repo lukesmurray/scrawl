@@ -1052,6 +1052,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@excalidraw/excalidraw@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@excalidraw/excalidraw/-/excalidraw-0.9.0.tgz#750e91bed9522cfefe7e683ba4c75cea111e2af3"
+  integrity sha512-/LrmrZnrI7LLjT6+UOpxYOPVaR9sEEPJT4afodTGFk07ZedpmWbcLk59WekurDhwuiU2vyZW3Pc/fy3pPkFpxw==
+
 "@fullhuman/postcss-purgecss@^4.0.3":
   version "4.0.3"
   resolved "https://registry.npmjs.org/@fullhuman/postcss-purgecss/-/postcss-purgecss-4.0.3.tgz#55d71712ec1c7a88e0d1ba5f10ce7fb6aa05beb4"
