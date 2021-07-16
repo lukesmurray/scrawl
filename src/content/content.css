@@ -1,0 +1,7 @@
+.excalidraw__canvas {
+  backdrop-filter: blur(3px);
+}
+
+.excalidraw.theme--dark {
+  background-color: rgba(0, 0, 0, 0.288);
+}
