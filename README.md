@@ -1,82 +1,33 @@
-G# Chrome Extension TypeScript Starter
+# Scrawl
 
-![build](https://github.com/chibat/chrome-extension-typescript-starter/workflows/build/badge.svg)
+<img src="./assets/icon.png" width="300px">
 
-Chrome Extension, TypeScript and Visual Studio Code
+A chrome extension which lets you draw on any web page with excalidraw.
 
-## Prerequisites
+## Contributing
 
-- [node + npm](https://nodejs.org/) (Current Version)
+To run the extension locally clone the extension to your machine and
 
-## Option
+1. `yarn install` to install dependencies
+2. `yarn start` to run in dev mode with live reloading
+3. go to `chrome://extensions/` in your chrome browser.
 
-- [Visual Studio Code](https://code.visualstudio.com/)
+- Enable developer mode in the top right
+- Select load unpacked
+- Load the `dist` folder
 
-## Includes the following
+4. Sometimes you will have to reload the app in `chrome://extensions/` if live reloading is not working
 
-- TypeScript
-- Webpack
-- React
-- Jest
-- Example Code
-  - Chrome Storage
-  - Options Version 2
-  - content script
-  - count up badge number
-  - background
+### Project Structure
 
-## Project Structure
-
-- src/typescript: TypeScript source files
-- src/assets: static files
+- src/\*: Various parts of the app
 - dist: Chrome Extension directory
 - dist/js: Generated JavaScript files
+- dist/excalidraw-\*: Generated excalidraw assets
 
-## Setup
+### Changes
 
-```
-npm install
-```
-
-## Import as Visual Studio Code project
-
-...
-
-## Build
-
-```
-npm run build
-```
-
-## Build in watch mode
-
-### terminal
-
-```
-npm run watch
-```
-
-### Visual Studio Code
-
-Run watch mode.
-
-type `Ctrl + Shift + B`
-
-## Load extension to chrome
-
-Load `dist` directory
-
-## Test
-
-`npx jest` or `npm run test`
-
-## Changes
-
-- Had to build excalidraw without sourcemaps so I can use it in a chrome extension
+- Had to build excalidraw without sourcemaps so I can use it in a chrome
+  extension in dev mode. Chrome extensions don't allow `eval` of strings as a
+  security policy.
   - [excalidraw build](https://github.com/lukesmurray/excalidraw/tree/luke/no-eval-source-map)
-- Had to remove the endings from `mv3-hot-reload`
-- The entire app is in the `content` directory in `src`
-- The excalidraw assets are in the `dist` directory
-- would like to save `appState` in local storage but we're missing `clear...localStorage` calls from excalidraw
-- the manifest content-scripts now matches `<all-urls>`
-- to run the extension run `yarn run dev:script` and load the `dist` directory

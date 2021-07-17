@@ -1,4 +1,5 @@
-import 'mv3-hot-reload/content'
+// define-excalidraw-assets has to be the first line
+import './define-excalidraw-assets'
 import ReactDOM from 'react-dom'
 import Content from './Content'
 import './content.css'

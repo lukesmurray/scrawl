@@ -1,11 +1,10 @@
 /* eslint-disable node/no-unpublished-require */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable node/no-unpublished-import */
-import path from 'path'
-
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import DotenvFlow from 'dotenv-flow-webpack'
+import path from 'path'
+import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 
 const isDev = process.env.NODE_ENV !== 'production'
@@ -62,6 +61,19 @@ const config: webpack.Configuration = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        test: /\.js($|\?)/i,
+        terserOptions: {
+          format: {
+            ascii_only: true,
+          },
+        },
+      }),
+    ],
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     alias: {
@@ -71,10 +83,6 @@ const config: webpack.Configuration = {
   // @ts-ignore
   plugins: [
     new CleanWebpackPlugin(),
-    new DotenvFlow(),
-    new webpack.EnvironmentPlugin({
-      MV3_HOT_RELOAD_PORT: 7761,
-    }),
     isDev &&
       new ReactRefreshWebpackPlugin({
         overlay: false,
