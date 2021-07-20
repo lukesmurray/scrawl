@@ -2,21 +2,29 @@
 
 <img src="./assets/icon.png" width="300px">
 
-A chrome extension which lets you draw on any web page with excalidraw.
+A chrome extension which lets you draw on any web page with excalidraw. ([Video Demo](https://twitter.com/lukesmurray/status/1416173606640443392))
+
+## Local Installation
+
+**The extension is pending review from the Chrome Store.** In the meantime you can run the extension locally by following these steps:
+
+1. `git clone` the repository to your local machine and `cd` into the directory.
+2. `yarn install` to install dependencies
+3. `yarn start` to run in dev mode with live reloading
+4. go to `chrome://extensions/` in your chrome browser.
+   - Enable developer mode in the top right
+   - Select load unpacked
+   - Load the `dist` folder
+5. Go to `http://google.com/blank` and press the keyboard shortcut `cmd/ctrl + shift + e` to enable the extension.
+
+## Settings
+
+You can change the extension settings by clicking on the Scrawl icon ![](./dist/images/icon16.png) in the browser toolbar.
 
 ## Contributing
 
-To run the extension locally clone the extension to your machine and
-
-1. `yarn install` to install dependencies
-2. `yarn start` to run in dev mode with live reloading
-3. go to `chrome://extensions/` in your chrome browser.
-
-- Enable developer mode in the top right
-- Select load unpacked
-- Load the `dist` folder
-
-4. Sometimes you will have to reload the app in `chrome://extensions/` if live reloading is not working
+Follow the instructions from Local Installation.
+Sometimes you will have to reload the app in `chrome://extensions/` if live reloading is not working
 
 ### Project Structure
 
