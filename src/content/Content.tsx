@@ -8,11 +8,22 @@ import {
 } from '@excalidraw/excalidraw/types/types'
 import isHotKey from 'is-hotkey'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { AppState as ScrawlAppState } from '../app/AppState'
 import { debounce } from '../app/utilities'
 
 const SAVE_TO_LOCAL_STORAGE_TIMEOUT = 300
 const LOCAL_STORAGE_KEY = 'scrawl'
+
+const GlobalStyle = createGlobalStyle`
+  .excalidraw__canvas {
+    backdrop-filter: blur(${(props) => props.theme.blurRadiusPx}px);
+  }
+
+  .excalidraw.theme--dark {
+    background-color: rgba(0, 0, 0, 0.288);
+  }
+`
 
 export default function Content() {
   const excalidrawRef = useRef<ExcalidrawImperativeAPI>(null)
@@ -26,6 +37,15 @@ export default function Content() {
   }, [])
   useEffect(() => {
     return subscribeToAppState((appState) => setScrawlAppState(appState))
+  }, [])
+  useEffect(() => {
+    const handleMessage = (message: any) => {
+      if (message.action === 'updateAppState') {
+        setScrawlAppState(message.payload.appState)
+      }
+    }
+    chrome.runtime.onMessage.addListener(handleMessage)
+    return () => chrome.runtime.onMessage.removeListener(handleMessage)
   }, [])
 
   const displayScrawlKeyHandler = useCallback(
@@ -69,7 +89,12 @@ export default function Content() {
   const drawingName = useMemo(() => urlKey(), [])
 
   return (
-    <>
+    <ThemeProvider
+      theme={{
+        blurRadiusPx: scrawlAppState?.blurRadiusPx ?? 0,
+      }}
+    >
+      <GlobalStyle />
       {scrawlVisible && (
         <div
           style={{
@@ -117,7 +142,7 @@ export default function Content() {
           </button>
         </div>
       )}
-    </>
+    </ThemeProvider>
   )
 }
 
