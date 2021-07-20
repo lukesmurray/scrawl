@@ -1,4 +1,4 @@
-import { AppState, defaultAppState } from './AppState'
+import { AppState, defaultAppState } from './appState'
 
 const APP_STATE_KEY = 'SCRAWL_APP_STATE'
 

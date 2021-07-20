@@ -1,20 +1,22 @@
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { AppState, isAppStateEqual } from '../app/AppState'
-import { loadAppState } from '../app/Storage'
+import { AppState, isAppStateEqual } from '../app/appState'
+import { loadAppState } from '../app/chromeStorage'
 
 const Popup = () => {
   const [savedAppState, setSavedAppState] = useState<AppState | null>(null)
   const [displayShortcut, setDisplayShortcut] = useState<null | string>(null)
   const [blurRadiusPx, setBlurRadiusPx] = useState<null | number>(null)
 
-  const newAppState = useMemo(
-    () => ({
-      displayShortcut,
-      blurRadiusPx,
-    }),
-    [blurRadiusPx, displayShortcut],
-  )
+  const newAppState: AppState | null = useMemo(() => {
+    if (savedAppState === null) {
+      return null
+    }
+    return {
+      displayShortcut: displayShortcut!,
+      blurRadiusPx: blurRadiusPx!,
+    }
+  }, [blurRadiusPx, displayShortcut, savedAppState])
 
   useEffect(() => {
     const handleAppStateLoaded = (appState: AppState) => {
@@ -28,16 +30,18 @@ const Popup = () => {
 
   // whenever the app state changes update it so the user can try it out
   useEffect(() => {
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(tab.id!, {
-          action: 'updateAppState',
-          payload: {
-            appState: newAppState,
-          },
+    if (newAppState !== null) {
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          chrome.tabs.sendMessage(tab.id!, {
+            action: 'updateAppState',
+            payload: {
+              appState: newAppState,
+            },
+          })
         })
       })
-    })
+    }
   }, [newAppState])
 
   return (
@@ -83,7 +87,9 @@ const Popup = () => {
             <button
               style={{ marginTop: '1rem' }}
               onClick={() => setSavedAppState(newAppState)}
-              disabled={isAppStateEqual(savedAppState, newAppState)}
+              disabled={
+                !!newAppState && isAppStateEqual(savedAppState, newAppState)
+              }
             >
               Save
             </button>

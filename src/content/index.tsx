@@ -1,4 +1,4 @@
-// define-excalidraw-assets has to be the first line
+// define-excalidraw-assets has to be imported before Content
 import ReactDOM from 'react-dom'
 import '../app/define-excalidraw-assets'
 import Content from './Content'

@@ -1,8 +1,7 @@
 import 'styled-components'
 
-// and extend them!
+// theme for styled components used to set global theme props
 declare module 'styled-components' {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface DefaultTheme {
     blurRadiusPx: number
   }

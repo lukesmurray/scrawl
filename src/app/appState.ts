@@ -1,6 +1,6 @@
 export interface AppState {
-  displayShortcut: string | null
-  blurRadiusPx: number | null
+  displayShortcut: string
+  blurRadiusPx: number
 }
 
 export const defaultAppState: AppState = {

@@ -1,6 +1,5 @@
-import { loadAppState, subscribeToAppState } from '@/app/Storage'
-import Excalidraw, { restore, serializeAsJSON } from '@excalidraw/excalidraw'
-import { ImportedDataState } from '@excalidraw/excalidraw/types/data/types'
+import { loadAppState, subscribeToAppState } from '@/app/chromeStorage'
+import Excalidraw from '@excalidraw/excalidraw'
 import { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types'
 import {
   AppState,
@@ -9,11 +8,15 @@ import {
 import isHotKey from 'is-hotkey'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import { AppState as ScrawlAppState } from '../app/AppState'
+import { AppState as ScrawlAppState } from '../app/appState'
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+  urlKey,
+} from '../app/localStorage'
 import { debounce } from '../app/utilities'
 
 const SAVE_TO_LOCAL_STORAGE_TIMEOUT = 300
-const LOCAL_STORAGE_KEY = 'scrawl'
 
 const GlobalStyle = createGlobalStyle`
   .excalidraw__canvas {
@@ -144,32 +147,4 @@ export default function Content() {
       )}
     </ThemeProvider>
   )
-}
-
-function localStorageKey() {
-  return `${LOCAL_STORAGE_KEY}-${urlKey()}`
-}
-
-function urlKey() {
-  return `${window.location.toString()}`
-}
-
-function saveToLocalStorage(
-  elements: readonly ExcalidrawElement[],
-  appState: AppState,
-) {
-  localStorage.setItem(localStorageKey(), serializeAsJSON(elements, appState))
-}
-
-function loadFromLocalStorage(): ImportedDataState {
-  const dataState = localStorage.getItem(localStorageKey())
-
-  const restoredDataState = restore(
-    dataState === null ? dataState : JSON.parse(dataState),
-    undefined,
-    undefined,
-  )
-  // make the background transparent so you can see the page behind the drawing
-  restoredDataState.appState.viewBackgroundColor = 'transparent'
-  return restoredDataState
 }
