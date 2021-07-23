@@ -7,6 +7,7 @@ import { sendMessageToTabs } from '../app/sendMessageToTabs'
 const Popup = () => {
   const [savedAppState, setSavedAppState] = useState<AppState | null>(null)
   const [displayShortcut, setDisplayShortcut] = useState<null | string>(null)
+  const [showToggle, setShowToggle] = useState<null | boolean>(null)
   const [blurRadiusPx, setBlurRadiusPx] = useState<null | number>(null)
 
   const newAppState: AppState | null = useMemo(() => {
@@ -16,13 +17,15 @@ const Popup = () => {
     return {
       displayShortcut: displayShortcut!,
       blurRadiusPx: blurRadiusPx!,
+      showToggle: showToggle!,
     }
-  }, [blurRadiusPx, displayShortcut, savedAppState])
+  }, [blurRadiusPx, displayShortcut, savedAppState, showToggle])
 
   useEffect(() => {
     const handleAppStateLoaded = (appState: AppState) => {
       setDisplayShortcut(appState.displayShortcut)
       setBlurRadiusPx(appState.blurRadiusPx)
+      setShowToggle(appState.showToggle)
       setSavedAppState(appState)
     }
 
@@ -79,6 +82,14 @@ const Popup = () => {
               step=".1"
               value={blurRadiusPx ?? 0}
               onChange={(e) => setBlurRadiusPx(Number(e.target.value))}
+            ></input>
+          </div>
+          <div>
+            <LabelWrapper htmlFor="show-toggle">Show Toggle</LabelWrapper>
+            <input
+              type="checkbox"
+              checked={showToggle ?? false}
+              onChange={(e) => setShowToggle(e.target.checked)}
             ></input>
           </div>
           <div>

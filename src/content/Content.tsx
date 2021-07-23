@@ -163,7 +163,8 @@ export default function Content() {
           />
         </div>
       )}
-      {window.location.href.endsWith('.pdf') && (
+      {(window.location.href.endsWith('.pdf') ||
+        scrawlAppState?.showToggle) && (
         <div
           style={{
             position: 'fixed',
