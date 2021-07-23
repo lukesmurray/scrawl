@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { AppState, isAppStateEqual } from '../app/appState'
 import { loadAppState } from '../app/chromeStorage'
+import { sendMessageToTabs } from '../app/sendMessageToTabs'
 
 const Popup = () => {
   const [savedAppState, setSavedAppState] = useState<AppState | null>(null)
@@ -31,16 +32,13 @@ const Popup = () => {
   // whenever the app state changes update it so the user can try it out
   useEffect(() => {
     if (newAppState !== null) {
-      chrome.tabs.query({}, (tabs) => {
-        tabs.forEach((tab) => {
-          chrome.tabs.sendMessage(tab.id!, {
-            action: 'updateAppState',
-            payload: {
-              appState: newAppState,
-            },
-          })
-        })
-      })
+      const message = {
+        action: 'updateAppState',
+        payload: {
+          appState: newAppState,
+        },
+      }
+      sendMessageToTabs(message)
     }
   }, [newAppState])
 

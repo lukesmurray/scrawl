@@ -1,5 +1,6 @@
 import { loadAppState, subscribeToAppState } from '@/app/chromeStorage'
 import Excalidraw from '@excalidraw/excalidraw'
+import { ImportedDataState } from '@excalidraw/excalidraw/types/data/types'
 import { ExcalidrawElement } from '@excalidraw/excalidraw/types/element/types'
 import {
   AppState,
@@ -12,12 +13,24 @@ import { AppState as ScrawlAppState } from '../app/appState'
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
-  urlKey,
+  urlBasedLocalStorageKey,
 } from '../app/localStorage'
 import { debounce } from '../app/utilities'
 
+/**
+ * Timeout used to debounce saving the drawing
+ */
 const SAVE_TO_LOCAL_STORAGE_TIMEOUT = 300
 
+/**
+ * function used to create the local storage key
+ * abstracted here to allow for alternative implementations
+ */
+const LOCAL_STORAGE_KEY_STRATEGY = urlBasedLocalStorageKey
+
+/**
+ * Global styles applied to blur the background
+ */
 const GlobalStyle = createGlobalStyle`
   .excalidraw__canvas {
     backdrop-filter: blur(${(props) => props.theme.blurRadiusPx}px);
@@ -30,8 +43,17 @@ const GlobalStyle = createGlobalStyle`
 
 export default function Content() {
   const excalidrawRef = useRef<ExcalidrawImperativeAPI>(null)
-  const [scrawlVisible, setScrawlVisible] = useState(false)
+  const [scrawlOverlayVisible, setScrawlOverlayVisible] = useState(false)
 
+  const [localStorageKey, setLocalStorageKey] = useState(
+    LOCAL_STORAGE_KEY_STRATEGY(),
+  )
+
+  const [initialData, setInitialData] = useState<ImportedDataState>(
+    loadFromLocalStorage(localStorageKey),
+  )
+
+  // TODO(lukemurray): rename AppState to ScrawlSettings to avoid naming confusion with excalidraw app state
   const [scrawlAppState, setScrawlAppState] = useState<ScrawlAppState | null>(
     null,
   )
@@ -39,16 +61,8 @@ export default function Content() {
     loadAppState().then((res) => setScrawlAppState(res))
   }, [])
   useEffect(() => {
+    // handle changes to extension settings synced from other computers
     return subscribeToAppState((appState) => setScrawlAppState(appState))
-  }, [])
-  useEffect(() => {
-    const handleMessage = (message: any) => {
-      if (message.action === 'updateAppState') {
-        setScrawlAppState(message.payload.appState)
-      }
-    }
-    chrome.runtime.onMessage.addListener(handleMessage)
-    return () => chrome.runtime.onMessage.removeListener(handleMessage)
   }, [])
 
   const displayScrawlKeyHandler = useCallback(
@@ -57,7 +71,7 @@ export default function Content() {
         scrawlAppState?.displayShortcut &&
         isHotKey(scrawlAppState?.displayShortcut, e)
       ) {
-        setScrawlVisible((scrawlVisible) => !scrawlVisible)
+        setScrawlOverlayVisible((scrawlVisible) => !scrawlVisible)
       }
     },
     [scrawlAppState?.displayShortcut],
@@ -72,9 +86,9 @@ export default function Content() {
   const saveDebounced = useMemo(
     () =>
       debounce((elements: readonly ExcalidrawElement[], state: AppState) => {
-        saveToLocalStorage(elements, state)
+        saveToLocalStorage(localStorageKey, elements, state)
       }, SAVE_TO_LOCAL_STORAGE_TIMEOUT),
-    [],
+    [localStorageKey],
   )
   const onBlur = useCallback(() => {
     saveDebounced.flush()
@@ -88,8 +102,30 @@ export default function Content() {
     }
   }, [onBlur])
 
-  const initialData = useMemo(() => loadFromLocalStorage(), [])
-  const drawingName = useMemo(() => urlKey(), [])
+  useEffect(() => {
+    // handle when the url changes
+    const handleHistoryUpdated = () => {
+      saveDebounced.flush()
+      const newLocalStorageKey = LOCAL_STORAGE_KEY_STRATEGY()
+      setLocalStorageKey(newLocalStorageKey)
+      setInitialData(loadFromLocalStorage(newLocalStorageKey))
+    }
+
+    // handle live changes to extension settings passed from background/popup
+    const handleUpdateAppState = (message: any) => {
+      setScrawlAppState(message.payload.appState)
+    }
+    const handleMessage = (message: any) => {
+      if (message.action === 'updateAppState') {
+        handleUpdateAppState(message)
+      }
+      if (message.action === 'historyUpdated') {
+        handleHistoryUpdated()
+      }
+    }
+    chrome.runtime.onMessage.addListener(handleMessage)
+    return () => chrome.runtime.onMessage.removeListener(handleMessage)
+  }, [saveDebounced])
 
   return (
     <ThemeProvider
@@ -98,7 +134,7 @@ export default function Content() {
       }}
     >
       <GlobalStyle />
-      {scrawlVisible && (
+      {scrawlOverlayVisible && (
         <div
           style={{
             position: 'fixed',
@@ -110,6 +146,7 @@ export default function Content() {
           }}
         >
           <Excalidraw
+            key={localStorageKey}
             ref={excalidrawRef}
             initialData={initialData}
             onChange={(
@@ -118,7 +155,6 @@ export default function Content() {
             ) => {
               saveDebounced(elements, appState)
             }}
-            name={drawingName}
             UIOptions={{
               canvasActions: {
                 changeViewBackgroundColor: false,
@@ -138,10 +174,10 @@ export default function Content() {
         >
           <button
             onClick={() => {
-              setScrawlVisible(!scrawlVisible)
+              setScrawlOverlayVisible(!scrawlOverlayVisible)
             }}
           >
-            {`${scrawlVisible ? `Hide` : `Show`} Scrawl`}
+            {`${scrawlOverlayVisible ? `Hide` : `Show`} Scrawl`}
           </button>
         </div>
       )}

@@ -5,7 +5,7 @@ import { AppState as ExcalidrawAppState } from '@excalidraw/excalidraw/types/typ
 
 const LOCAL_STORAGE_KEY = 'scrawl'
 
-function localStorageKey() {
+export function urlBasedLocalStorageKey() {
   return `${LOCAL_STORAGE_KEY}-${urlKey()}`
 }
 
@@ -14,14 +14,17 @@ export function urlKey() {
 }
 
 export function saveToLocalStorage(
+  localStorageKey: string,
   elements: readonly ExcalidrawElement[],
   appState: ExcalidrawAppState,
 ) {
-  localStorage.setItem(localStorageKey(), serializeAsJSON(elements, appState))
+  localStorage.setItem(localStorageKey, serializeAsJSON(elements, appState))
 }
 
-export function loadFromLocalStorage(): ImportedDataState {
-  const dataState = localStorage.getItem(localStorageKey())
+export function loadFromLocalStorage(
+  localStorageKey: string,
+): ImportedDataState {
+  const dataState = localStorage.getItem(localStorageKey)
 
   const restoredDataState = restore(
     dataState === null ? dataState : JSON.parse(dataState),

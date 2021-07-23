@@ -3,6 +3,9 @@
   "name": "Scrawl",
   "description": "Draw on any web page with excalidraw.",
   "version": "0.1",
+  "background": {
+    "service_worker": "sw.js"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -26,7 +29,7 @@
     "128": "/images/icon128.png",
     "300": "/images/icon300.png"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "webNavigation"],
   "web_accessible_resources": [
     {
       "resources": ["excalidraw-assets/*", "excalidraw-assets-dev/*"],
