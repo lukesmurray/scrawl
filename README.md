@@ -1,8 +1,11 @@
 # Scrawl
 
+**Check it out on the [chrome web store](https://chrome.google.com/webstore/detail/scrawl/egoccpljknghnoighgpjahfekpcnifma)**
+
 <img src="./assets/icon.png" width="300px">
 
 A chrome extension which lets you draw on any web page with excalidraw. ([Video Demo](https://twitter.com/lukesmurray/status/1416173606640443392))
+
 
 ## Local Installation
 
