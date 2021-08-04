@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { AppState, isAppStateEqual } from '../app/appState'
-import { loadAppState } from '../app/chromeStorage'
+import { loadAppState, saveAppState } from '../app/chromeStorage'
 import { sendMessageToTabs } from '../app/sendMessageToTabs'
 
 const Popup = () => {
   const [savedAppState, setSavedAppState] = useState<AppState | null>(null)
+  const [unsavedAppState, setUnsavedAppState] = useState<AppState | null>(null)
   const [displayShortcut, setDisplayShortcut] = useState<null | string>(null)
   const [showToggle, setShowToggle] = useState<null | boolean>(null)
   const [blurRadiusPx, setBlurRadiusPx] = useState<null | number>(null)
@@ -20,6 +21,14 @@ const Popup = () => {
       showToggle: showToggle!,
     }
   }, [blurRadiusPx, displayShortcut, savedAppState, showToggle])
+
+  useEffect(() => {
+    if (unsavedAppState !== null) {
+      saveAppState(unsavedAppState)
+      setSavedAppState(unsavedAppState)
+      setUnsavedAppState(null)
+    }
+  }, [unsavedAppState])
 
   useEffect(() => {
     const handleAppStateLoaded = (appState: AppState) => {
@@ -95,7 +104,7 @@ const Popup = () => {
           <div>
             <button
               style={{ marginTop: '1rem' }}
-              onClick={() => setSavedAppState(newAppState)}
+              onClick={() => setUnsavedAppState(newAppState)}
               disabled={
                 !!newAppState && isAppStateEqual(savedAppState, newAppState)
               }
