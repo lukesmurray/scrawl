@@ -1,6 +1,6 @@
 {
   "name": "scrawl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Draw on any web page with excalidraw.",
   "scripts": {
     "watch:src": " cross-env NODE_ENV=development webpack",

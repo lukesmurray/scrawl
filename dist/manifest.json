@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Scrawl",
   "description": "Draw on any web page with excalidraw.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "background": {
     "persistent": false,
     "scripts": ["js/background.js"]
