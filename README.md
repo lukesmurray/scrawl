@@ -1,15 +1,14 @@
 # Scrawl
 
-**Check it out on the [chrome web store](https://chrome.google.com/webstore/detail/scrawl/egoccpljknghnoighgpjahfekpcnifma)**
+## Installation
+
+**Check it out on the [chrome web store](https://chrome.google.com/webstore/detail/scrawl/egoccpljknghnoighgpjahfekpcnifma)** and _coming soon_ on as a [firefox add on](https://addons.mozilla.org/en-US/firefox/addon/scrawly/).
 
 <img src="./assets/icon.png" width="300px">
 
 A chrome extension which lets you draw on any web page with excalidraw. ([Video Demo](https://twitter.com/lukesmurray/status/1416173606640443392))
 
-
 ## Local Installation
-
-**The extension is pending review from the Chrome Store.** In the meantime you can run the extension locally by following these steps:
 
 1. `git clone` the repository to your local machine and `cd` into the directory.
 2. `yarn install` to install dependencies
