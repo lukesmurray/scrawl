@@ -9,6 +9,7 @@ import {
 import isHotKey from 'is-hotkey'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import browser from 'webextension-polyfill'
 import { AppState as ScrawlAppState } from '../app/appState'
 import {
   loadFromLocalStorage,
@@ -123,8 +124,8 @@ export default function Content() {
         handleHistoryUpdated()
       }
     }
-    chrome.runtime.onMessage.addListener(handleMessage)
-    return () => chrome.runtime.onMessage.removeListener(handleMessage)
+    browser.runtime.onMessage.addListener(handleMessage)
+    return () => browser.runtime.onMessage.removeListener(handleMessage)
   }, [saveDebounced])
 
   return (

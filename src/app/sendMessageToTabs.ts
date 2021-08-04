@@ -1,14 +1,15 @@
+import browser from 'webextension-polyfill'
 export function sendMessageToTabs(
   message: { action: string; payload?: any },
   {
     filterTabs = () => true,
   }: {
-    filterTabs?: (tab: chrome.tabs.Tab) => boolean
+    filterTabs?: (tab: browser.Tabs.Tab) => boolean
   } = {},
 ) {
-  chrome.tabs.query({}, (tabs) => {
+  browser.tabs.query({}).then((tabs) => {
     tabs.filter(filterTabs).forEach((tab) => {
-      chrome.tabs.sendMessage(tab.id!, message)
+      browser.tabs.sendMessage(tab.id!, message)
     })
   })
 }

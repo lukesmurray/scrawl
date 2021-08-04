@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill'
 import { AppState, defaultAppState } from './appState'
 
 const APP_STATE_KEY = 'SCRAWL_APP_STATE'
@@ -6,29 +7,15 @@ const APP_STATE_KEY = 'SCRAWL_APP_STATE'
  * Asynchronously saves the app state
  */
 export function saveAppState(appState: AppState): Promise<void> {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.set({ [APP_STATE_KEY]: appState }, () => {
-      if (chrome.runtime.lastError) {
-        return reject(chrome.runtime.lastError)
-      } else {
-        return resolve()
-      }
-    })
-  })
+  return browser.storage.sync.set({ [APP_STATE_KEY]: appState })
 }
 
 /**
  * Asynchronously loads the app state
  */
 export function loadAppState(): Promise<AppState> {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get([APP_STATE_KEY], (result) => {
-      if (chrome.runtime.lastError) {
-        return reject(chrome.runtime.lastError)
-      } else {
-        return resolve({ ...defaultAppState, ...(result[APP_STATE_KEY] ?? {}) })
-      }
-    })
+  return browser.storage.sync.get([APP_STATE_KEY]).then((result) => {
+    return { ...defaultAppState, ...(result[APP_STATE_KEY] ?? {}) }
   })
 }
 
@@ -48,8 +35,8 @@ export function subscribeToAppState(
     }
   }
 
-  chrome.storage.onChanged.addListener(onChangeHandler)
+  browser.storage.onChanged.addListener(onChangeHandler)
   return () => {
-    chrome.storage.onChanged.removeListener(onChangeHandler)
+    browser.storage.onChanged.removeListener(onChangeHandler)
   }
 }

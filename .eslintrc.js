@@ -26,6 +26,7 @@ module.exports = {
     'node/shebang': 'off',
     'no-console': 'error',
     'react-hooks/exhaustive-deps': 'error',
+    'node/no-unpublished-import': 'off',
   },
   overrides: [
     {
