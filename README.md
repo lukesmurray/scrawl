@@ -2,7 +2,7 @@
 
 ## Installation
 
-**Check it out on the [chrome web store](https://chrome.google.com/webstore/detail/scrawl/egoccpljknghnoighgpjahfekpcnifma)** and _coming soon_ on as a [firefox add on](https://addons.mozilla.org/en-US/firefox/addon/scrawly/).
+**Check it out on the [chrome web store](https://chrome.google.com/webstore/detail/scrawl/egoccpljknghnoighgpjahfekpcnifma)** or as a [firefox add on](https://addons.mozilla.org/en-US/firefox/addon/scrawly/).
 
 <img src="./assets/icon.png" width="300px">
 
