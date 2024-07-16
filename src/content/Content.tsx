@@ -175,11 +175,23 @@ export default function Content() {
           }}
         >
           <button
+            style={{
+              padding: '0.5rem 0.5rem',
+              fontSize: '1rem',
+              borderRadius: '1rem',
+              border: 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              cursor: 'pointer',
+              height: '2rem',
+              width: '2rem',
+              lineHeight: 1,
+            }}
             onClick={() => {
               setScrawlOverlayVisible(!scrawlOverlayVisible)
             }}
           >
-            {`${scrawlOverlayVisible ? `Hide` : `Show`} Scrawl`}
+            {`${scrawlOverlayVisible ? `X` : `🖊️`}`}
           </button>
         </div>
       )}
